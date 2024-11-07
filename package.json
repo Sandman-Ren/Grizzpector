@@ -1,0 +1,48 @@
+{
+  "name": "grizzpector",
+  "version": "1.0.0",
+  "description": "Grizzpector is a discord bot that checks your eggstrawork stats and make interesting comments on you, your shifts and your colleagues.",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "start:watch": "nodemon",
+    "dev": "npm-run-all --parallel build:watch start:watch",
+    "start": "node dist/index.js",
+    "bulkOverwriteGlobalApplicationCommands": "tsx src/scripts/bulk-overwrite-global-application-commands.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sandman-Ren/Grizzpector.git"
+  },
+  "keywords": [
+    "discord",
+    "splatoon",
+    "bot"
+  ],
+  "author": "Sandman-Ren",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sandman-Ren/Grizzpector/issues"
+  },
+  "homepage": "https://github.com/Sandman-Ren/Grizzpector#readme",
+  "dependencies": {
+    "discord-api-types": "^0.37.103",
+    "discord-interactions": "^4.1.0",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "nxapi": "^1.6.1-next.154"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "@types/express": "^5.0.0",
+    "eslint": "^9.14.0",
+    "globals": "^15.12.0",
+    "nodemon": "^3.1.7",
+    "npm-run-all": "^4.1.5",
+    "typescript-eslint": "^8.13.0"
+  }
+}
