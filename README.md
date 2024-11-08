@@ -10,6 +10,11 @@ Grizzpector is a discord bot that rates your Splatoon 3 Eggstrawork shifts on be
 
 Grizzpector is currently hosted on a private server and being tested in a private discord server. Stay tuned for a release!
 
+Follow the steps below for interacting with Grizzpector in your Discord server:
+- `/signin` to sign in via your Nintendo Switch Online account
+- `/inspect` to inspect your Splatoon 3 Eggstrawork shift, scored by a hard-coded scoring function
+  - by default, Grizzpector's response is only visible to the command invoker, use the `/inspect public <True/False>` command to make it visible to everyone in the channel
+
 ## Supported Commands
 
 Below is a list of commands supported by Grizzpector. Currently, all commands are installed as global slash commands.
