@@ -1,0 +1,23 @@
+services:
+  grizzpector:
+    image: sandmanren/grizzpector:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - DISCORD_APP_ID=${DISCORD_APP_ID}
+      - DISCORD_PUBLIC_KEY=${DISCORD_PUBLIC_KEY}
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+    networks:
+      - grizzpector-network
+  ngrok:
+    image: ngrok/ngrok:latest
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+      - NGROK_URL=${NGROK_URL}
+    command: http grizzpector:3000 --url=${NGROK_URL}
+    networks:
+      - grizzpector-network
+
+networks:
+  grizzpector-network:
+    driver: bridge
