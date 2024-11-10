@@ -1,7 +1,7 @@
 {
   "name": "grizzpector",
   "version": "1.0.0",
-  "description": "Grizzpector is a discord bot that checks your eggstrawork stats and make interesting comments on you, your shifts and your colleagues.",
+  "description": "Grizzpector is a discord bot that checks your Salmon Run stats and make interesting comments on you, your shifts and your colleagues.",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {

@@ -17,7 +17,7 @@ const PokeCommand: ChatInputApplicationCommandData = {
 const InspectCommand: ChatInputApplicationCommandData = {
     name: "inspect",
     type: ApplicationCommandType.ChatInput,
-    description: "Grizzpector inspects the results of the most recent eggstrawork shift.",
+    description: "Grizzpector inspects the results of the most recent Salmon Run shift.",
     options: [
         {
             type: ApplicationCommandOptionType.Boolean,
