@@ -9,6 +9,19 @@ services:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
     networks:
       - grizzpector-network
+    volumes:
+      - ./volumes/app/data:/app/data
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
   ngrok:
     image: ngrok/ngrok:latest
     environment:
@@ -17,6 +30,12 @@ services:
     command: http grizzpector:3000 --url=${NGROK_URL}
     networks:
       - grizzpector-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   grizzpector-network:

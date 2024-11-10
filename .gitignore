@@ -1,3 +1,6 @@
+# mounted volumes for docker compose
+volumes
+
 # data directories
 data
 
