@@ -34,7 +34,8 @@
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "nxapi": "^1.6.1-next.154"
+    "nxapi": "^1.6.1-next.154",
+    "redis": "^4.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",

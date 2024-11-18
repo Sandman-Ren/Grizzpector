@@ -1,59 +1,71 @@
-/*
-* module persistence exports classes for providing a persistence layer for Grizzpector
-* */
-
-import fs from "fs";
-import path from "path";
-
 /**
- * PersistenceProvide is an abstract class representing a layer of persistence. An implementing provider should behave
- * like a hashmap that takes in a key for persistence and retrieval.
- * @class PersistenceProvider
+ * module persistence exports persistence providers that behaves like key-value stores. methods are async.
  */
+
+import asyncFs from "fs/promises";
+import path from "path";
+import {createClient, RedisClientType} from 'redis';
+
+export {
+    PersistenceProvider,
+    LocalFsJsonPersistenceProvider,
+    RedisPersistenceProvider,
+};
+
 abstract class PersistenceProvider {
-    abstract save(key: unknown, data: unknown): Promise<unknown> | unknown;
-    abstract load(key: unknown): Promise<unknown> | unknown;
+    abstract save(key: string, value: unknown): Promise<unknown>;
+
+    abstract load(key: string): Promise<unknown>;
 }
 
-class LocalFsJsonPersistenceProviderSync extends PersistenceProvider {
+class LocalFsJsonPersistenceProvider extends PersistenceProvider {
+    baseDirectory: string;
 
-    baseDir: string;
-
-    /**
-     * Initializes a new instance of the class with the specified base directory.
-     *
-     * @param {string} baseDir - The base directory to initialize the instance with.
-     * @return {void} This constructor does not return a value.
-     */
-    constructor(baseDir: string) {
+    constructor(baseDirectory: string) {
         super();
-        this.baseDir = baseDir;
+        this.baseDirectory = baseDirectory;
     }
 
-    /**
-     * Converts the given key to a specific file path by combining it with the base directory
-     * and appending the .json extension.
-     *
-     * @param {string} key - The unique identifier to be converted into a file path.
-     * @return {string} The resulting path string which includes the base directory and the .json extension.
-     */
-    _keyToPath(key: string): string {
-        return path.join(this.baseDir, `${key}.json`);
+    private keyToFilePath(key: string): string {
+        return path.join(this.baseDirectory, `${key}.json`);
     }
 
-    save(key: string, data: string): void {
-        fs.writeFileSync(
-            this._keyToPath(key),
-            JSON.stringify(data)
-        );
+    async save(key: string, value: unknown): Promise<void> {
+        const filePath = this.keyToFilePath(key);
+        await asyncFs.mkdir(this.baseDirectory, {recursive: true});
+        await asyncFs.writeFile(filePath, JSON.stringify(value, null, 2));
     }
 
-    load(key: string): string {
-        const filePath= this._keyToPath(key);
-        if (!fs.existsSync(filePath)) {
-            throw new Error(`key ${key} not found`);
-        }
+    async load(key: string): Promise<unknown> {
+        const filePath = this.keyToFilePath(key);
+        const data = await asyncFs.readFile(filePath, {encoding: 'utf-8'});
+        return JSON.parse(data);
+    }
+}
 
-        return fs.readFileSync(filePath).toString();
+class RedisPersistenceProvider extends PersistenceProvider {
+    client: RedisClientType;
+
+    constructor(redisUrl: string) {
+        super();
+        this.client = createClient({url: redisUrl});
+        this.client.on('error', console.error);
+    }
+
+    async connect(): Promise<void> {
+        await this.client.connect();
+    }
+
+    async save(key: string, value: unknown): Promise<void> {
+        await this.client.set(key, JSON.stringify(value));
+    }
+
+    async load(key: string): Promise<unknown> {
+        const data = await this.client.get(key);
+        return data ? JSON.parse(data) : null;
+    }
+
+    async disconnect(): Promise<void> {
+        await this.client.disconnect();
     }
 }
