@@ -12,6 +12,7 @@ import {verifyKeyMiddleware} from "discord-interactions";
 import {handleApplicationCommandInteraction} from "./handlers/application-command-handlers.js";
 import {handleMessageComponentInteraction} from "./handlers/message-component-handlers.js";
 import {handleModalSubmitInteraction} from "./handlers/modal-submit-handlers.js";
+import {logger} from "./logging.js";
 
 if (process.env.DISCORD_TOKEN === undefined) {
     throw new Error(
@@ -33,20 +34,20 @@ function createExpressApp(discordPublicKey: string): express.Express {
     // @ts-ignore
     discordRouter.post("/interactions", verifyKeyMiddleware(discordPublicKey), (req: express.Request, res: express.Response) => {
         const interaction: APIInteraction = req.body;
-        console.log(`received interaction: ${JSON.stringify(interaction, null, 2)}`);
+        logger.info(`received interaction: ${JSON.stringify(interaction, null, 2)}`);
         switch (interaction.type) {
             case InteractionType.Ping: {
                 return res.json({type: InteractionResponseType.Pong});
             }
             case InteractionType.ApplicationCommand:
-                console.log(`received application command: ${(interaction as APIApplicationCommandInteraction).data.name}`);
+                logger.info(`received application command: ${(interaction as APIApplicationCommandInteraction).data.name}`);
                 return handleApplicationCommandInteraction(req, res, interaction as APIApplicationCommandInteraction);
             case InteractionType.MessageComponent: {
-                console.log(`received message component interaction: ${(interaction as APIMessageComponentInteraction).data.custom_id}`);
+                logger.info(`received message component interaction: ${(interaction as APIMessageComponentInteraction).data.custom_id}`);
                 return handleMessageComponentInteraction(req, res, interaction as APIMessageComponentInteraction);
             }
             case InteractionType.ModalSubmit: {
-                console.log(`received modal submit interaction: ${(interaction as APIModalSubmitInteraction).data.custom_id}`);
+                logger.info(`received modal submit interaction: ${(interaction as APIModalSubmitInteraction).data.custom_id}`);
                 return handleModalSubmitInteraction(req, res, interaction as APIModalSubmitInteraction);
             }
             default: {
